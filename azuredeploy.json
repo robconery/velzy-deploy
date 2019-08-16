@@ -2,11 +2,11 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "sites_velzysimple_name": {
+    "App Name": {
       "defaultValue": "velzysimple",
       "type": "String"
     },
-    "serverfarms_velzyfree_name": {
+    "Plan Name": {
       "defaultValue": "velzyfree",
       "type": "String"
     }
@@ -16,7 +16,7 @@
     {
       "type": "Microsoft.Web/serverfarms",
       "apiVersion": "2016-09-01",
-      "name": "[parameters('serverfarms_velzyfree_name')]",
+      "name": "[parameters('Plan Name')]",
       "location": "West US 2",
       "sku": {
         "name": "S1",
@@ -27,7 +27,7 @@
       },
       "kind": "linux",
       "properties": {
-        "name": "[parameters('serverfarms_velzyfree_name')]",
+        "name": "[parameters('Plan Name')]",
         "perSiteScaling": false,
         "reserved": true,
         "targetWorkerCount": 0,
@@ -37,27 +37,27 @@
     {
       "type": "Microsoft.Web/sites",
       "apiVersion": "2016-08-01",
-      "name": "[parameters('sites_velzysimple_name')]",
+      "name": "[parameters('App Name')]",
       "location": "West US 2",
       "dependsOn": [
-        "[resourceId('Microsoft.Web/serverfarms', parameters('serverfarms_velzyfree_name'))]"
+        "[resourceId('Microsoft.Web/serverfarms', parameters('Plan Name'))]"
       ],
       "kind": "app,linux,container",
       "properties": {
         "enabled": true,
         "hostNameSslStates": [
           {
-            "name": "[concat(parameters('sites_velzysimple_name'), '.azurewebsites.net')]",
+            "name": "[concat(parameters('App Name'), '.azurewebsites.net')]",
             "sslState": "Disabled",
             "hostType": "Standard"
           },
           {
-            "name": "[concat(parameters('sites_velzysimple_name'), '.scm.azurewebsites.net')]",
+            "name": "[concat(parameters('App Name'), '.scm.azurewebsites.net')]",
             "sslState": "Disabled",
             "hostType": "Repository"
           }
         ],
-        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('serverfarms_velzyfree_name'))]",
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('Plan Name'))]",
         "reserved": true,
         "scmSiteAlsoStopped": false,
         "clientAffinityEnabled": true,
@@ -71,10 +71,10 @@
     {
       "type": "Microsoft.Web/sites/config",
       "apiVersion": "2016-08-01",
-      "name": "[concat(parameters('sites_velzysimple_name'), '/web')]",
+      "name": "[concat(parameters('App Name'), '/web')]",
       "location": "West US 2",
       "dependsOn": [
-        "[resourceId('Microsoft.Web/sites', parameters('sites_velzysimple_name'))]"
+        "[resourceId('Microsoft.Web/sites', parameters('App Name'))]"
       ],
       "properties": {
         "numberOfWorkers": 1,
@@ -163,10 +163,10 @@
     {
       "type": "Microsoft.Web/sites/hostNameBindings",
       "apiVersion": "2016-08-01",
-      "name": "[concat(parameters('sites_velzysimple_name'), '/', parameters('sites_velzysimple_name'), '.azurewebsites.net')]",
+      "name": "[concat(parameters('App Name'), '/', parameters('App Name'), '.azurewebsites.net')]",
       "location": "West US 2",
       "dependsOn": [
-        "[resourceId('Microsoft.Web/sites', parameters('sites_velzysimple_name'))]"
+        "[resourceId('Microsoft.Web/sites', parameters('App Name'))]"
       ],
       "properties": {
         "siteName": "velzysimple",
