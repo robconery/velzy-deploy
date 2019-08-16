@@ -11,9 +11,26 @@
       "type": "String"
     },
     "Plan SKU": {
-      "defaultValue": "S1",
+      "defaultValue": "B1",
       "type": "String",
-      "meta": {
+      "allowedValues": [
+        "F1",
+        "SHARED",
+        "B1",
+        "B2",
+        "B3",
+        "S1",
+        "S2",
+        "S3",
+        "D1",
+        "P1V2",
+        "P2V2",
+        "P3V2",
+        "PC2",
+        "PC3",
+        "PC4"
+      ],
+      "metadata": {
         "description":"F1 is free, B1 is basic, S1 is good for general use."
       }
     }
