@@ -10,6 +10,10 @@
       "defaultValue": "",
       "type": "String"
     },
+    "Location" : {
+      "defaultValue" : "westus2",
+      "type" : "String"
+    },
     "Plan SKU": {
       "defaultValue": "B1",
       "type": "String",
@@ -41,7 +45,7 @@
       "type": "Microsoft.Web/serverfarms",
       "apiVersion": "2016-09-01",
       "name": "[parameters('Plan Name')]",
-      "location": "West US 2",
+      "location": "[parameters('Location')]",
       "sku": {
         "name": "[parameters('Plan SKU')]",
         "capacity": 1
@@ -59,7 +63,7 @@
       "type": "Microsoft.Web/sites",
       "apiVersion": "2016-08-01",
       "name": "[parameters('App Name')]",
-      "location": "West US 2",
+      "location": "[parameters('Location')]",
       "dependsOn": [
         "[resourceId('Microsoft.Web/serverfarms', parameters('Plan Name'))]"
       ],
@@ -93,7 +97,7 @@
       "type": "Microsoft.Web/sites/config",
       "apiVersion": "2016-08-01",
       "name": "[concat(parameters('App Name'), '/web')]",
-      "location": "West US 2",
+      "location": "[parameters('Location')]",
       "dependsOn": [
         "[resourceId('Microsoft.Web/sites', parameters('App Name'))]"
       ],
@@ -185,7 +189,7 @@
       "type": "Microsoft.Web/sites/hostNameBindings",
       "apiVersion": "2016-08-01",
       "name": "[concat(parameters('App Name'), '/', parameters('App Name'), '.azurewebsites.net')]",
-      "location": "West US 2",
+      "location": "[parameters('Location')]",
       "dependsOn": [
         "[resourceId('Microsoft.Web/sites', parameters('App Name'))]"
       ],
