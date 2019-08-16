@@ -43,7 +43,7 @@
       "name": "[parameters('Plan Name')]",
       "location": "West US 2",
       "sku": {
-        "name": "[parameters('Plan Name')]",
+        "name": "[parameters('Plan SKU')]",
         "capacity": 1
       },
       "kind": "linux",
