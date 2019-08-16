@@ -2,51 +2,62 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "App Name": {
-      "defaultValue": "",
-      "type": "String",
-      "metadata": {
-        "description":"The name of your app, which has to be unique across Azure"
-      }
+    "sites_velzysimple_name": {
+      "defaultValue": "velzysimple",
+      "type": "String"
     },
-    "Plan Name": {
-      "defaultValue": "",
-      "type": "String",
-      "metadata": {
-        "description":"The name of your App Service Plan"
-      }
-    },
-    "SKU": {
-      "defaultValue": "S1",
-      "type": "String",
-      "metadata": {
-        "description":"The App Service SKU you want to use. You can do free, if you want, using F1 but it's not terribly fast. B1 works, but S1 is good for production."
-      }
+    "serverfarms_velzyfree_name": {
+      "defaultValue": "velzyfree",
+      "type": "String"
     }
   },
   "variables": {},
   "resources": [
     {
+      "type": "Microsoft.Web/serverfarms",
+      "apiVersion": "2016-09-01",
+      "name": "[parameters('serverfarms_velzyfree_name')]",
+      "location": "West US 2",
+      "sku": {
+        "name": "S1",
+        "tier": "Standard",
+        "size": "S1",
+        "family": "S",
+        "capacity": 1
+      },
+      "kind": "linux",
+      "properties": {
+        "name": "[parameters('serverfarms_velzyfree_name')]",
+        "perSiteScaling": false,
+        "reserved": true,
+        "targetWorkerCount": 0,
+        "targetWorkerSizeId": 0
+      }
+    },
+    {
       "type": "Microsoft.Web/sites",
       "apiVersion": "2016-08-01",
-      "name": "[parameters('App Name')]",
+      "name": "[parameters('sites_velzysimple_name')]",
       "location": "West US 2",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', parameters('serverfarms_velzyfree_name'))]"
+      ],
       "kind": "app,linux,container",
       "properties": {
         "enabled": true,
         "hostNameSslStates": [
           {
-            "name": "[concat(parameters('App Name'), '.azurewebsites.net')]",
+            "name": "[concat(parameters('sites_velzysimple_name'), '.azurewebsites.net')]",
             "sslState": "Disabled",
             "hostType": "Standard"
           },
           {
-            "name": "[concat(parameters('App Name'), '.scm.azurewebsites.net')]",
+            "name": "[concat(parameters('sites_velzysimple_name'), '.scm.azurewebsites.net')]",
             "sslState": "Disabled",
             "hostType": "Repository"
           }
         ],
-        "serverFarmId": "[parameters('Plan Name')]",
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('serverfarms_velzyfree_name'))]",
         "reserved": true,
         "scmSiteAlsoStopped": false,
         "clientAffinityEnabled": true,
@@ -60,10 +71,10 @@
     {
       "type": "Microsoft.Web/sites/config",
       "apiVersion": "2016-08-01",
-      "name": "[concat(parameters('App Name'), '/web')]",
+      "name": "[concat(parameters('sites_velzysimple_name'), '/web')]",
       "location": "West US 2",
       "dependsOn": [
-        "[resourceId('Microsoft.Web/sites', parameters('App Name'))]"
+        "[resourceId('Microsoft.Web/sites', parameters('sites_velzysimple_name'))]"
       ],
       "properties": {
         "numberOfWorkers": 1,
@@ -89,7 +100,7 @@
         "httpLoggingEnabled": true,
         "logsDirectorySizeLimit": 100,
         "detailedErrorLoggingEnabled": true,
-        "publishingUsername": "$velzy",
+        "publishingUsername": "$velzysimple",
         "scmType": "None",
         "use32BitWorkerProcess": true,
         "webSocketsEnabled": false,
@@ -147,6 +158,19 @@
         "ftpsState": "AllAllowed",
         "reservedInstanceCount": 0,
         "fileChangeAuditEnabled": false
+      }
+    },
+    {
+      "type": "Microsoft.Web/sites/hostNameBindings",
+      "apiVersion": "2016-08-01",
+      "name": "[concat(parameters('sites_velzysimple_name'), '/', parameters('sites_velzysimple_name'), '.azurewebsites.net')]",
+      "location": "West US 2",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', parameters('sites_velzysimple_name'))]"
+      ],
+      "properties": {
+        "siteName": "velzysimple",
+        "hostNameType": "Verified"
       }
     }
   ]
