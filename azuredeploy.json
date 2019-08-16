@@ -3,12 +3,19 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "App Name": {
-      "defaultValue": "velzysimple",
+      "defaultValue": "",
       "type": "String"
     },
     "Plan Name": {
-      "defaultValue": "velzyfree",
+      "defaultValue": "",
       "type": "String"
+    },
+    "Plan SKU": {
+      "defaultValue": "S1",
+      "type": "String",
+      "meta": {
+        "description":"F1 is free, B1 is basic, S1 is good for general use."
+      }
     }
   },
   "variables": {},
@@ -19,10 +26,7 @@
       "name": "[parameters('Plan Name')]",
       "location": "West US 2",
       "sku": {
-        "name": "S1",
-        "tier": "Standard",
-        "size": "S1",
-        "family": "S",
+        "name": "[parameters('Plan Name')]",
         "capacity": 1
       },
       "kind": "linux",
